@@ -10,9 +10,34 @@
       background: linear-gradient(135deg, #ff6b6b, #feca57, #48dbfb, #1dd1a1);
       background-size: 400% 400%;
       animation: gradientMove 15s ease infinite;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: sans-serif;
     }
-    
 
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .btn {
+      padding: 15px 30px;
+      background-color: #ffffff;
+      color: #333;
+      border: none;
+      border-radius: 30px;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #f1f1f1;
+      transform: scale(1.05);
+    }
     @keyframes gradientMove {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
@@ -21,5 +46,7 @@
   </style>
 </head>
 <body>
+  <a href="https://portal.vpsmust.com/whmcs/" class="btn-link" target="_blank">
+    <div class="btn">BUY NOW</div>
 </body>
 </html>
