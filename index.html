@@ -1,197 +1,230 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>VPS MUST</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f4f4f4;
-    }
-
-    .nav {
-      background: #1e3a8a;
-      color: white;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 30px;
-    }
-    .nav h2 {
-      margin: 0;
-      font-size: 24px;
-    }
-    .nav ul {
-      list-style: none;
-      display: flex;
-      gap: 20px;
-      margin: 0;
-      padding: 0;
-    }
-    .nav ul li a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    .header {
-      background: #1e40af;
-      color: white;
-      padding: 60px 20px 30px;
-      text-align: center;
-    }
-    .header h1 {
-      margin: 0;
-      font-size: 48px;
-    }
-    .header p {
-      font-size: 20px;
-    }
-
-    .cta {
-      margin-top: 30px;
-    }
-    .cta a {
-      background: #3b82f6;
-      color: white;
-      padding: 15px 30px;
-      text-decoration: none;
-      font-size: 18px;
-      border-radius: 8px;
-    }
-
-    /* Flag Slider */
-    .flag-slider {
-      overflow: hidden;
-      background: #e0e7ff;
-      padding: 20px 0;
-      margin-top: 30px;
-    }
-    .flag-track {
-      display: flex;
-      width: calc(150px * 12);
-      animation: slide 20s linear infinite;
-    }
-    .flag {
-      width: 150px;
-      flex-shrink: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 10px;
-    }
-    .flag img {
-      width: 80px;
-      height: auto;
-      border-radius: 5px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    }
-
-    @keyframes slide {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-
-    .features {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin: 40px 20px;
-    }
-    .feature {
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      margin: 10px;
-      padding: 20px;
-      flex: 1 1 300px;
-      max-width: 300px;
-      text-align: center;
-    }
-
-    .footer {
-      background: #1e3a8a;
-      color: white;
-      text-align: center;
-      padding: 20px;
-      margin-top: 40px;
-    }
-    .footer a {
-      color: #cbd5e1;
-      margin: 0 10px;
-      text-decoration: none;
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>VPS Monthly Tracker — Professional Dashboard</title>
+<style>
+body{font-family:system-ui,Segoe UI,Roboto,Arial;margin:0;padding:0;background:#f0f2f5}
+.wrap{max-width:1250px;margin:16px auto;background:#fff;padding:16px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.08)}
+h1{font-size:22px;margin:0 0 14px;color:#111;font-weight:600}
+.topbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center;font-size:13px}
+input,select,button{padding:6px 10px;border:1px solid #ccc;border-radius:6px;font-size:13px;outline:none}
+input:focus,select:focus{border-color:#1890ff;box-shadow:0 0 4px rgba(24,144,255,0.3)}
+button{cursor:pointer;transition:all 0.2s}
+button:hover{opacity:0.9}
+.primary{background:#1890ff;color:#fff;border:none}
+.outline{background:#fff;border:1px solid #ccc;color:#333}
+.small{font-size:11px;padding:4px 6px}
+form{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:12px;align-items:end}
+form .full{grid-column:1/-1}
+table{width:100%;border-collapse:collapse;margin-top:8px;font-size:12px;table-layout:fixed;box-shadow:0 2px 12px rgba(0,0,0,0.03);border-radius:8px;overflow:hidden;}
+thead{background:#f7f7f8;position:sticky;top:0;z-index:2;box-shadow:0 2px 5px rgba(0,0,0,0.05)}
+th,td{padding:6px 8px;border-bottom:1px solid #e0e0e0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left}
+tbody tr:nth-child(even){background:#fafafa}
+tbody tr:hover{background:#f1f7ff}
+td.profit-positive{color:#28a745;font-weight:500}
+td.profit-negative{color:#dc3545;font-weight:500}
+td.remaining-expired{color:#ff4d4f;font-weight:600}
+td.remaining-warning{color:#e6a23c;font-weight:600}
+.summary{margin-top:8px;color:#555;font-size:12px}
+.actions button{margin-right:4px}
+.small-col{width:60px;text-align:right}
+.table-container{max-height:500px;overflow:auto;border:1px solid #e0e0e0;border-radius:8px;}
+</style>
 </head>
 <body>
+<div class="wrap">
+<h1>VPS Monthly Tracker </h1>
 
-  <!-- Navigation Header -->
-  <nav class="nav">
-    <h2>VPS MUST</h2>
-    <ul>
-      <li><a href="https://vpsmust.com">Home</a></li>
-      <li><a href="https://portal.vpsmust.com/whmcs/">Shop</a></li>
-      <li><a href="/about">About</a></li>
-    </ul>
-  </nav>
+<div class="topbar">
+  <label>View month:</label>
+  <input id="viewMonth" type="month">
+  <button id="showAll" class="outline small">Show All</button>
+  <label>Search IP:</label>
+  <input id="searchIP" placeholder="Type IP...">
+</div>
 
-  <!-- Hero Section -->
-  <div class="header">
-    <h1>Welcome to VPS MUST</h1>
-    <p> "The VPS You Can Trust— Made for Pakistan."</p>
-    
-    <div class="cta">
-      <a href="https://portal.vpsmust.com/whmcs">Get Started</a>
-    </div>
+<form id="entryForm">
+  <div><label>Name</label><input id="name" required></div>
+  <div><label>Start Date</label><input id="startDate" type="date" required></div>
+  <div><label>IPs</label><input id="ips" placeholder="45.67.84.236,23.230.253.232"></div>
+  <div><label>Username </label><input id="notes"></div>
+  <div class="small-col"><label>Sale</label><input id="sale" type="number" min="0" value="0"></div>
+  <div class="small-col"><label>Expense</label><input id="expense" type="number" min="0" value="0"></div>
+  <div><label>Provider</label><input id="provider"></div>
+  <div><button id="addBtn" class="primary full" type="submit">Add / Save</button></div>
+  <div><button id="resetBtn" type="button" class="outline full">Reset Form</button></div>
+  <input type="hidden" id="editingKey">
+</form>
 
-    <!-- Flag Slider -->
-    <div class="flag-slider">
-      <div class="flag-track">
-        <div class="flag"><img src="https://flagcdn.com/us.svg" alt="USA"></div>
-        <div class="flag"><img src="https://flagcdn.com/gb.svg" alt="UK"></div>
-        <div class="flag"><img src="https://flagcdn.com/au.svg" alt="Australia"></div>
-        <div class="flag"><img src="https://flagcdn.com/ae.svg" alt="UAE"></div>
-        <div class="flag"><img src="https://flagcdn.com/de.svg" alt="Germany"></div>
-        <div class="flag"><img src="https://flagcdn.com/pk.svg" alt="Pakistan"></div>
+<div id="summary" class="summary">No month selected — click a month to view its data.</div>
 
-        <!-- Repeat to loop continuously -->
-        <div class="flag"><img src="https://flagcdn.com/us.svg" alt="USA"></div>
-        <div class="flag"><img src="https://flagcdn.com/gb.svg" alt="UK"></div>
-        <div class="flag"><img src="https://flagcdn.com/au.svg" alt="Australia"></div>
-        <div class="flag"><img src="https://flagcdn.com/ae.svg" alt="UAE"></div>
-        <div class="flag"><img src="https://flagcdn.com/de.svg" alt="Germany"></div>
-        <div class="flag"><img src="https://flagcdn.com/pk.svg" alt="Pakistan"></div>
-      </div>
-    </div>
-  </div>
+<div class="table-container">
+<table id="dataTable">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Name</th>
+      <th>Start</th>
+      <th>End</th>
+      <th>Remaining</th>
+      <th>IPs</th>
+      <th>Username / Notes</th>
+      <th class="small-col">Sale</th>
+      <th class="small-col">Expense</th>
+      <th class="small-col">Profit</th>
+      <th>Provider</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+  <tfoot id="totalsRow"></tfoot>
+</table>
+</div>
+</div>
 
-  <!-- Features Section -->
-  <div class="features">
-    <div class="feature">
-      <h3>High Performance</h3>
-      <p>Powered by the latest hardware and SSD storage, our VPS ensures lightning-fast load times and superior performance for your websites and applications.</p>
-    </div>
-    <div class="feature">
-      <h3>Guaranteed Uptime</h3>
-      <p>We offer a robust infrastructure with a guaranteed uptime of 99.9%, so your business is always online when your customers need you.</p>
-    </div>
-    <div class="feature">
-      <h3>Experts</h3>
-      <p>Our expert support team is available around the clock to assist you with any technical queries, ensuring a hassle-free hosting experience.</p>
-    </div>
-  </div>
+<script>
+// Utilities
+const MONTH_KEY_PREFIX='vps_data_';
+function formatDayMMM(date){ const d=new Date(date); return d.getDate()+'-'+d.toLocaleString('en-US',{month:'short'}); }
+function addDays(date,days){ const d=new Date(date); d.setDate(d.getDate()+days); return d; }
+function daysRemaining(endDate){ return Math.ceil((new Date(endDate).setHours(0,0,0,0)-new Date().setHours(0,0,0,0))/(1000*60*60*24)); }
+function storageKeyForMonth(m){ return MONTH_KEY_PREFIX+m; }
+function saveEntryToMonth(m,e){ const arr=JSON.parse(localStorage.getItem(storageKeyForMonth(m))||'[]'); arr.push(e); localStorage.setItem(storageKeyForMonth(m),JSON.stringify(arr)); }
+function updateEntryInMonth(m,id,e){ const arr=JSON.parse(localStorage.getItem(storageKeyForMonth(m))||'[]'); const idx=arr.findIndex(x=>x.id===id); if(idx>=0){arr[idx]=e; localStorage.setItem(storageKeyForMonth(m),JSON.stringify(arr)); return true;} return false; }
+function deleteEntryFromMonth(m,id){ const arr=JSON.parse(localStorage.getItem(storageKeyForMonth(m))||'[]'); localStorage.setItem(storageKeyForMonth(m),JSON.stringify(arr.filter(x=>x.id!==id))); }
+function getEntriesForMonth(m){ return JSON.parse(localStorage.getItem(storageKeyForMonth(m))||'[]'); }
+function getAllMonthsStored(){ const months=[]; for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k&&k.startsWith(MONTH_KEY_PREFIX)) months.push(k.replace(MONTH_KEY_PREFIX,'')); } return months.sort(); }
 
-  <!-- Footer -->
-  <div class="footer">
-    <p>© 2025 VPS MUST. All rights reserved.</p>
-    <p>
-      <a href="/privacy-policy">Privacy Policy</a> |
-      <a href="/refund-policy">Refund Policy</a>
-    </p>
-  </div>
+// DOM refs
+const entryForm=document.getElementById('entryForm'),
+      nameIn=document.getElementById('name'),
+      startIn=document.getElementById('startDate'),
+      ipsIn=document.getElementById('ips'),
+      saleIn=document.getElementById('sale'),
+      expenseIn=document.getElementById('expense'),
+      providerIn=document.getElementById('provider'),
+      notesIn=document.getElementById('notes'),
+      editingKeyIn=document.getElementById('editingKey'),
+      tbody=document.querySelector('#dataTable tbody'),
+      viewMonth=document.getElementById('viewMonth'),
+      showAllBtn=document.getElementById('showAll'),
+      summary=document.getElementById('summary'),
+      searchInput=document.getElementById('searchIP');
 
+// Helpers
+function uid(){return'id_'+Date.now()+'_'+Math.floor(Math.random()*9999);}
+function monthFromDateInput(d){ const dt=new Date(d); return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0'); }
+function escapeHtml(s){ if(!s)return''; return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m])); }
+
+function renderTableForMonth(m, ipFilter='') {
+  tbody.innerHTML='';
+  if(!m){ summary.textContent='No month selected'; return; }
+  const arr=getEntriesForMonth(m).filter(e => !ipFilter || (e.ips && e.ips.includes(ipFilter)));
+  summary.textContent = `${arr.length} record(s) for ${m}`;
+  let totalSale=0,totalExp=0,totalProfit=0;
+  arr.forEach((e,idx)=>{
+    const tr=document.createElement('tr');
+    const endDate=addDays(e.start,30);
+    const remaining=daysRemaining(endDate);
+    const profit=(Number(e.sale)||0)-(Number(e.expense)||0);
+    let profitClass=profit>=0?'profit-positive':'profit-negative';
+    let remainingClass=remaining<0?'remaining-expired':(remaining<=5?'remaining-warning':'');
+    tr.innerHTML=`<td>${idx+1}</td>
+      <td>${escapeHtml(e.name)}</td>
+      <td>${formatDayMMM(e.start)}</td>
+      <td>${formatDayMMM(endDate)}</td>
+      <td class="${remainingClass}">${remaining>=0?remaining+' days':'Expired'}</td>
+      <td>${escapeHtml(e.ips||'')}</td>
+      <td>${escapeHtml(e.notes||'')}</td>
+      <td class="small-col">${e.sale}</td>
+      <td class="small-col">${e.expense}</td>
+      <td class="small-col ${profitClass}">${profit}</td>
+      <td>${escapeHtml(e.provider||'')}</td>
+      <td class="actions">
+        <button class="small" data-id="${e.id}" data-month="${m}" onclick="editEntry(event)">Edit</button>
+        <button class="small" data-id="${e.id}" data-month="${m}" onclick="deleteEntry(event)">Delete</button>
+      </td>`;
+    tbody.appendChild(tr);
+    totalSale+=Number(e.sale)||0; totalExp+=Number(e.expense)||0; totalProfit+=profit;
+  });
+  document.getElementById('totalsRow').innerHTML=`<tr style="font-weight:600;background:#f7f7f8"><td colspan="7">Totals</td><td class="small-col">${totalSale}</td><td class="small-col">${totalExp}</td><td class="small-col">${totalProfit}</td><td colspan="2"></td></tr>`;
+}
+
+// Event Listeners
+entryForm.addEventListener('submit',ev=>{
+  ev.preventDefault();
+  const name=nameIn.value.trim(),start=startIn.value;if(!name||!start){alert('Name and Start Date required'); return;}
+  const sale=Number(saleIn.value)||0,expense=Number(expenseIn.value)||0,provider=providerIn.value.trim(),ips=ipsIn.value.trim(),notes=notesIn.value.trim();
+  const entry={id:editingKeyIn.value||uid(),name,start,sale,expense,provider,ips,notes};
+  const yyyy_mm=monthFromDateInput(start);
+  if(editingKeyIn.value){
+    const stored=editingKeyIn.dataset.orig;
+    if(stored){ const [orig_month,orig_id]=stored.split('::'); if(orig_month===yyyy_mm){updateEntryInMonth(yyyy_mm,orig_id,entry);}else{deleteEntryFromMonth(orig_month,orig_id); saveEntryToMonth(yyyy_mm,entry);} }
+    else{ updateEntryInMonth(yyyy_mm,entry.id,entry); }
+    editingKeyIn.value=''; delete editingKeyIn.dataset.orig;
+  }else{ saveEntryToMonth(yyyy_mm,entry); }
+  entryForm.reset(); 
+  // Reset default Start Date & Username after save
+  const today = new Date().toISOString().split('T')[0]; startIn.value=today; notesIn.value='Administrator';
+  renderTableForMonth(viewMonth.value, searchInput.value.trim());
+});
+
+document.getElementById('resetBtn').addEventListener('click',()=>{entryForm.reset(); editingKeyIn.value=''; delete editingKeyIn.dataset.orig; const today = new Date().toISOString().split('T')[0]; startIn.value=today; notesIn.value='Administrator'; });
+window.editEntry=function(ev){ const btn=ev.currentTarget; const id=btn.dataset.id; const month=btn.dataset.month; const arr=getEntriesForMonth(month); const e=arr.find(x=>x.id===id); if(!e)return alert('Record not found'); nameIn.value=e.name; startIn.value=e.start; saleIn.value=e.sale; expenseIn.value=e.expense; providerIn.value=e.provider; ipsIn.value=e.ips; notesIn.value=e.notes; editingKeyIn.value=e.id; editingKeyIn.dataset.orig=month+'::'+e.id; window.scrollTo({top:0,behavior:'smooth'});};
+window.deleteEntry=function(ev){ const btn=ev.currentTarget; const id=btn.dataset.id; const month=btn.dataset.month; if(!confirm('Delete this record?'))return; deleteEntryFromMonth(month,id); renderTableForMonth(viewMonth.value, searchInput.value.trim());};
+
+viewMonth.addEventListener('change',()=>{ renderTableForMonth(viewMonth.value, searchInput.value.trim()); });
+showAllBtn.addEventListener('click',()=>{
+  tbody.innerHTML='';
+  const months=getAllMonthsStored();
+  let total=0;
+  months.forEach(mon=>{
+    const arr=getEntriesForMonth(mon).filter(e => !searchInput.value.trim() || (e.ips && e.ips.includes(searchInput.value.trim())));
+    arr.forEach((e,idx)=>{
+      total++;
+      const tr=document.createElement('tr');
+      const endDate=addDays(e.start,30);
+      const remaining=daysRemaining(endDate);
+      const profit=(Number(e.sale)||0)-(Number(e.expense)||0);
+      let profitClass=profit>=0?'profit-positive':'profit-negative';
+      let remainingClass=remaining<0?'remaining-expired':(remaining<=5?'remaining-warning':'');
+      tr.innerHTML=`<td>${total}</td>
+        <td>${escapeHtml(e.name)}</td>
+        <td>${formatDayMMM(e.start)} (${mon})</td>
+        <td>${formatDayMMM(endDate)}</td>
+        <td class="${remainingClass}">${remaining>=0?remaining+' days':'Expired'}</td>
+        <td>${escapeHtml(e.ips||'')}</td>
+        <td>${escapeHtml(e.notes||'')}</td>
+        <td class="small-col">${e.sale}</td>
+        <td class="small-col">${e.expense}</td>
+        <td class="small-col ${profitClass}">${profit}</td>
+        <td>${escapeHtml(e.provider||'')}</td>
+        <td class="actions">
+          <button class="small" data-id="${e.id}" data-month="${mon}" onclick="editEntry(event)">Edit</button>
+          <button class="small" data-id="${e.id}" data-month="${mon}" onclick="deleteEntry(event)">Delete</button>
+        </td>`;
+      tbody.appendChild(tr);
+    });
+  });
+  summary.textContent=`Showing all months (${months.length} months, ${total} records)`;
+});
+
+// IP Search
+searchInput.addEventListener('input',()=>{ renderTableForMonth(viewMonth.value, searchInput.value.trim()); });
+
+// Auto select current month & set default Start Date & Username
+(function init(){
+  const now=new Date();
+  const yyyy=now.getFullYear();
+  const mm=String(now.getMonth()+1).padStart(2,'0');
+  viewMonth.value=`${yyyy}-${mm}`;
+  const today = now.toISOString().split('T')[0];
+  startIn.value=today;
+  notesIn.value='Administrator';
+  renderTableForMonth(viewMonth.value);
+})();
+</script>
 </body>
 </html>
