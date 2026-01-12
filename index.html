@@ -1,230 +1,206 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>VPS Monthly Tracker — Professional Dashboard</title>
+<meta charset="utf-8">
+<title>VPS Monthly Tracker — Ledger Safe</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
-body{font-family:system-ui,Segoe UI,Roboto,Arial;margin:0;padding:0;background:#f0f2f5}
-.wrap{max-width:1250px;margin:16px auto;background:#fff;padding:16px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.08)}
-h1{font-size:22px;margin:0 0 14px;color:#111;font-weight:600}
-.topbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center;font-size:13px}
-input,select,button{padding:6px 10px;border:1px solid #ccc;border-radius:6px;font-size:13px;outline:none}
-input:focus,select:focus{border-color:#1890ff;box-shadow:0 0 4px rgba(24,144,255,0.3)}
-button{cursor:pointer;transition:all 0.2s}
-button:hover{opacity:0.9}
-.primary{background:#1890ff;color:#fff;border:none}
-.outline{background:#fff;border:1px solid #ccc;color:#333}
-.small{font-size:11px;padding:4px 6px}
-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:12px;align-items:end}
-form .full{grid-column:1/-1}
-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:12px;table-layout:fixed;box-shadow:0 2px 12px rgba(0,0,0,0.03);border-radius:8px;overflow:hidden;}
-thead{background:#f7f7f8;position:sticky;top:0;z-index:2;box-shadow:0 2px 5px rgba(0,0,0,0.05)}
-th,td{padding:6px 8px;border-bottom:1px solid #e0e0e0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left}
+body{font-family:system-ui;background:#f0f2f5;margin:0}
+.wrap{max-width:1300px;margin:16px auto;background:#fff;padding:16px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+h1{margin:0 0 12px;font-size:22px}
+input,button{padding:6px 10px;border:1px solid #ccc;border-radius:6px;font-size:13px}
+button{cursor:pointer}
+.primary{background:#1677ff;color:#fff;border:none}
+.outline{background:#fff}
+.topbar{display:flex;gap:8px;align-items:center;margin-bottom:12px;font-size:13px}
+form{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{padding:6px;border-bottom:1px solid #e0e0e0;white-space:nowrap}
+thead{background:#f7f7f8}
 tbody tr:nth-child(even){background:#fafafa}
-tbody tr:hover{background:#f1f7ff}
-td.profit-positive{color:#28a745;font-weight:500}
-td.profit-negative{color:#dc3545;font-weight:500}
-td.remaining-expired{color:#ff4d4f;font-weight:600}
-td.remaining-warning{color:#e6a23c;font-weight:600}
-.summary{margin-top:8px;color:#555;font-size:12px}
+.profit-pos{color:#28a745;font-weight:600}
+.profit-neg{color:#dc3545;font-weight:600}
+.closed{opacity:.5;text-decoration:line-through}
 .actions button{margin-right:4px}
-.small-col{width:60px;text-align:right}
-.table-container{max-height:500px;overflow:auto;border:1px solid #e0e0e0;border-radius:8px;}
+.summary{font-size:12px;color:#555;margin:6px 0}
 </style>
 </head>
 <body>
+
 <div class="wrap">
-<h1>VPS Monthly Tracker </h1>
+<h1>VPS Monthly Tracker (Ledger-Safe)</h1>
 
 <div class="topbar">
-  <label>View month:</label>
-  <input id="viewMonth" type="month">
-  <button id="showAll" class="outline small">Show All</button>
+  <label>Month:</label>
+  <input type="month" id="viewMonth">
+  <button id="showAll" class="outline">Show All</button>
   <label>Search IP:</label>
-  <input id="searchIP" placeholder="Type IP...">
+  <input id="searchIP" placeholder="IP">
 </div>
 
 <form id="entryForm">
-  <div><label>Name</label><input id="name" required></div>
-  <div><label>Start Date</label><input id="startDate" type="date" required></div>
-  <div><label>IPs</label><input id="ips" placeholder="45.67.84.236,23.230.253.232"></div>
-  <div><label>Username </label><input id="notes"></div>
-  <div class="small-col"><label>Sale</label><input id="sale" type="number" min="0" value="0"></div>
-  <div class="small-col"><label>Expense</label><input id="expense" type="number" min="0" value="0"></div>
-  <div><label>Provider</label><input id="provider"></div>
-  <div><button id="addBtn" class="primary full" type="submit">Add / Save</button></div>
-  <div><button id="resetBtn" type="button" class="outline full">Reset Form</button></div>
-  <input type="hidden" id="editingKey">
+  <input id="name" placeholder="Client Name" required>
+  <input id="startDate" type="date" required>
+  <input id="ips" placeholder="IPs">
+  <input id="notes" placeholder="Username / Notes">
+  <input id="sale" type="number" placeholder="Sale" value="0">
+  <input id="expense" type="number" placeholder="Expense" value="0">
+  <input id="provider" placeholder="Provider">
+  <button class="primary" type="submit">Add / Save</button>
+  <button type="button" id="resetBtn" class="outline">Reset</button>
+  <input type="hidden" id="editingId">
 </form>
 
-<div id="summary" class="summary">No month selected — click a month to view its data.</div>
+<div id="summary" class="summary"></div>
 
-<div class="table-container">
-<table id="dataTable">
-  <thead>
-    <tr>
-      <th>#</th>
-      <th>Name</th>
-      <th>Start</th>
-      <th>End</th>
-      <th>Remaining</th>
-      <th>IPs</th>
-      <th>Username / Notes</th>
-      <th class="small-col">Sale</th>
-      <th class="small-col">Expense</th>
-      <th class="small-col">Profit</th>
-      <th>Provider</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-  <tfoot id="totalsRow"></tfoot>
+<table>
+<thead>
+<tr>
+<th>#</th><th>Name</th><th>Start</th><th>IPs</th>
+<th>Sale</th><th>Expense</th><th>Profit</th>
+<th>Provider</th><th>Status</th><th>Actions</th>
+</tr>
+</thead>
+<tbody id="tbody"></tbody>
+<tfoot id="totals"></tfoot>
 </table>
-</div>
 </div>
 
 <script>
-// Utilities
-const MONTH_KEY_PREFIX='vps_data_';
-function formatDayMMM(date){ const d=new Date(date); return d.getDate()+'-'+d.toLocaleString('en-US',{month:'short'}); }
-function addDays(date,days){ const d=new Date(date); d.setDate(d.getDate()+days); return d; }
-function daysRemaining(endDate){ return Math.ceil((new Date(endDate).setHours(0,0,0,0)-new Date().setHours(0,0,0,0))/(1000*60*60*24)); }
-function storageKeyForMonth(m){ return MONTH_KEY_PREFIX+m; }
-function saveEntryToMonth(m,e){ const arr=JSON.parse(localStorage.getItem(storageKeyForMonth(m))||'[]'); arr.push(e); localStorage.setItem(storageKeyForMonth(m),JSON.stringify(arr)); }
-function updateEntryInMonth(m,id,e){ const arr=JSON.parse(localStorage.getItem(storageKeyForMonth(m))||'[]'); const idx=arr.findIndex(x=>x.id===id); if(idx>=0){arr[idx]=e; localStorage.setItem(storageKeyForMonth(m),JSON.stringify(arr)); return true;} return false; }
-function deleteEntryFromMonth(m,id){ const arr=JSON.parse(localStorage.getItem(storageKeyForMonth(m))||'[]'); localStorage.setItem(storageKeyForMonth(m),JSON.stringify(arr.filter(x=>x.id!==id))); }
-function getEntriesForMonth(m){ return JSON.parse(localStorage.getItem(storageKeyForMonth(m))||'[]'); }
-function getAllMonthsStored(){ const months=[]; for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k&&k.startsWith(MONTH_KEY_PREFIX)) months.push(k.replace(MONTH_KEY_PREFIX,'')); } return months.sort(); }
+const PREFIX='vps_';
+const tbody=document.getElementById('tbody');
+const viewMonth=document.getElementById('viewMonth');
+const searchIP=document.getElementById('searchIP');
+const summary=document.getElementById('summary');
+const startIn=document.getElementById('startDate');
+const editingId=document.getElementById('editingId');
 
-// DOM refs
-const entryForm=document.getElementById('entryForm'),
-      nameIn=document.getElementById('name'),
-      startIn=document.getElementById('startDate'),
-      ipsIn=document.getElementById('ips'),
-      saleIn=document.getElementById('sale'),
-      expenseIn=document.getElementById('expense'),
-      providerIn=document.getElementById('provider'),
-      notesIn=document.getElementById('notes'),
-      editingKeyIn=document.getElementById('editingKey'),
-      tbody=document.querySelector('#dataTable tbody'),
-      viewMonth=document.getElementById('viewMonth'),
-      showAllBtn=document.getElementById('showAll'),
-      summary=document.getElementById('summary'),
-      searchInput=document.getElementById('searchIP');
+const f=id=>document.getElementById(id);
+const uid=()=>Date.now()+'_'+Math.random().toString(36).slice(2);
+const mKey=m=>PREFIX+m;
+const monthFrom=d=>d.slice(0,7);
 
-// Helpers
-function uid(){return'id_'+Date.now()+'_'+Math.floor(Math.random()*9999);}
-function monthFromDateInput(d){ const dt=new Date(d); return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0'); }
-function escapeHtml(s){ if(!s)return''; return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m])); }
+function load(m){return JSON.parse(localStorage.getItem(mKey(m))||'[]')}
+function save(m,a){localStorage.setItem(mKey(m),JSON.stringify(a))}
+function allMonths(){return Object.keys(localStorage).filter(k=>k.startsWith(PREFIX)).map(k=>k.replace(PREFIX,''))}
 
-function renderTableForMonth(m, ipFilter='') {
+function render(m,showClosed=false){
   tbody.innerHTML='';
-  if(!m){ summary.textContent='No month selected'; return; }
-  const arr=getEntriesForMonth(m).filter(e => !ipFilter || (e.ips && e.ips.includes(ipFilter)));
-  summary.textContent = `${arr.length} record(s) for ${m}`;
-  let totalSale=0,totalExp=0,totalProfit=0;
-  arr.forEach((e,idx)=>{
+  let totalS=0,totalE=0,totalP=0,count=0;
+  if(!m)return;
+
+  load(m).filter(e=>{
+    if(!showClosed && e.status==='closed')return false;
+    if(searchIP.value && !(e.ips||'').includes(searchIP.value))return false;
+    return true;
+  }).forEach((e,i)=>{
+    const profit=e.sale-e.expense;
+    totalS+=e.sale; totalE+=e.expense; totalP+=profit;
     const tr=document.createElement('tr');
-    const endDate=addDays(e.start,30);
-    const remaining=daysRemaining(endDate);
-    const profit=(Number(e.sale)||0)-(Number(e.expense)||0);
-    let profitClass=profit>=0?'profit-positive':'profit-negative';
-    let remainingClass=remaining<0?'remaining-expired':(remaining<=5?'remaining-warning':'');
-    tr.innerHTML=`<td>${idx+1}</td>
-      <td>${escapeHtml(e.name)}</td>
-      <td>${formatDayMMM(e.start)}</td>
-      <td>${formatDayMMM(endDate)}</td>
-      <td class="${remainingClass}">${remaining>=0?remaining+' days':'Expired'}</td>
-      <td>${escapeHtml(e.ips||'')}</td>
-      <td>${escapeHtml(e.notes||'')}</td>
-      <td class="small-col">${e.sale}</td>
-      <td class="small-col">${e.expense}</td>
-      <td class="small-col ${profitClass}">${profit}</td>
-      <td>${escapeHtml(e.provider||'')}</td>
-      <td class="actions">
-        <button class="small" data-id="${e.id}" data-month="${m}" onclick="editEntry(event)">Edit</button>
-        <button class="small" data-id="${e.id}" data-month="${m}" onclick="deleteEntry(event)">Delete</button>
-      </td>`;
+    if(e.status==='closed')tr.classList.add('closed');
+    tr.innerHTML=`
+<td>${++count}</td>
+<td>${e.name}</td>
+<td>${e.start}</td>
+<td>${e.ips||''}</td>
+<td>${e.sale}</td>
+<td>${e.expense}</td>
+<td class="${profit>=0?'profit-pos':'profit-neg'}">${profit}</td>
+<td>${e.provider||''}</td>
+<td>${e.status}</td>
+<td class="actions">
+<button onclick="edit('${m}','${e.id}')">Edit</button>
+${e.status==='active'?`<button onclick="closeEntry('${m}','${e.id}')">Close</button>`:''}
+</td>`;
     tbody.appendChild(tr);
-    totalSale+=Number(e.sale)||0; totalExp+=Number(e.expense)||0; totalProfit+=profit;
   });
-  document.getElementById('totalsRow').innerHTML=`<tr style="font-weight:600;background:#f7f7f8"><td colspan="7">Totals</td><td class="small-col">${totalSale}</td><td class="small-col">${totalExp}</td><td class="small-col">${totalProfit}</td><td colspan="2"></td></tr>`;
+
+  summary.textContent=`${count} records — ${m}`;
+  document.getElementById('totals').innerHTML=
+`<tr style="font-weight:600"><td colspan="4">Totals</td>
+<td>${totalS}</td><td>${totalE}</td><td>${totalP}</td>
+<td colspan="3"></td></tr>`;
 }
 
-// Event Listeners
-entryForm.addEventListener('submit',ev=>{
-  ev.preventDefault();
-  const name=nameIn.value.trim(),start=startIn.value;if(!name||!start){alert('Name and Start Date required'); return;}
-  const sale=Number(saleIn.value)||0,expense=Number(expenseIn.value)||0,provider=providerIn.value.trim(),ips=ipsIn.value.trim(),notes=notesIn.value.trim();
-  const entry={id:editingKeyIn.value||uid(),name,start,sale,expense,provider,ips,notes};
-  const yyyy_mm=monthFromDateInput(start);
-  if(editingKeyIn.value){
-    const stored=editingKeyIn.dataset.orig;
-    if(stored){ const [orig_month,orig_id]=stored.split('::'); if(orig_month===yyyy_mm){updateEntryInMonth(yyyy_mm,orig_id,entry);}else{deleteEntryFromMonth(orig_month,orig_id); saveEntryToMonth(yyyy_mm,entry);} }
-    else{ updateEntryInMonth(yyyy_mm,entry.id,entry); }
-    editingKeyIn.value=''; delete editingKeyIn.dataset.orig;
-  }else{ saveEntryToMonth(yyyy_mm,entry); }
-  entryForm.reset(); 
-  // Reset default Start Date & Username after save
-  const today = new Date().toISOString().split('T')[0]; startIn.value=today; notesIn.value='Administrator';
-  renderTableForMonth(viewMonth.value, searchInput.value.trim());
-});
+entryForm.onsubmit=e=>{
+  e.preventDefault();
+  const entry={
+    id:editingId.value||uid(),
+    name:f('name').value,
+    start:f('startDate').value,
+    ips:f('ips').value,
+    notes:f('notes').value,
+    sale:+f('sale').value||0,
+    expense:+f('expense').value||0,
+    provider:f('provider').value,
+    status:'active'
+  };
 
-document.getElementById('resetBtn').addEventListener('click',()=>{entryForm.reset(); editingKeyIn.value=''; delete editingKeyIn.dataset.orig; const today = new Date().toISOString().split('T')[0]; startIn.value=today; notesIn.value='Administrator'; });
-window.editEntry=function(ev){ const btn=ev.currentTarget; const id=btn.dataset.id; const month=btn.dataset.month; const arr=getEntriesForMonth(month); const e=arr.find(x=>x.id===id); if(!e)return alert('Record not found'); nameIn.value=e.name; startIn.value=e.start; saleIn.value=e.sale; expenseIn.value=e.expense; providerIn.value=e.provider; ipsIn.value=e.ips; notesIn.value=e.notes; editingKeyIn.value=e.id; editingKeyIn.dataset.orig=month+'::'+e.id; window.scrollTo({top:0,behavior:'smooth'});};
-window.deleteEntry=function(ev){ const btn=ev.currentTarget; const id=btn.dataset.id; const month=btn.dataset.month; if(!confirm('Delete this record?'))return; deleteEntryFromMonth(month,id); renderTableForMonth(viewMonth.value, searchInput.value.trim());};
+  const m=monthFrom(entry.start);
+  const arr=load(m);
 
-viewMonth.addEventListener('change',()=>{ renderTableForMonth(viewMonth.value, searchInput.value.trim()); });
-showAllBtn.addEventListener('click',()=>{
+  if(editingId.value){
+    const i=arr.findIndex(x=>x.id===editingId.value);
+    arr[i]={...arr[i],...entry,status:arr[i].status};
+  }else arr.push(entry);
+
+  save(m,arr);
+  entryForm.reset();
+  editingId.value='';
+  startIn.disabled=false;
+  render(viewMonth.value);
+};
+
+window.edit=(m,id)=>{
+  const e=load(m).find(x=>x.id===id);
+  if(!e)return;
+  f('name').value=e.name;
+  f('startDate').value=e.start;
+  f('ips').value=e.ips;
+  f('notes').value=e.notes;
+  f('sale').value=e.sale;
+  f('expense').value=e.expense;
+  f('provider').value=e.provider;
+  editingId.value=id;
+  startIn.disabled=true; // 🔒 month lock
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+
+window.closeEntry=(m,id)=>{
+  if(!confirm('Close this client?'))return;
+  const arr=load(m);
+  const i=arr.findIndex(x=>x.id===id);
+  arr[i].status='closed';
+  arr[i].closedAt=new Date().toISOString();
+  save(m,arr);
+  render(viewMonth.value);
+};
+
+document.getElementById('resetBtn').onclick=()=>{
+  entryForm.reset();
+  editingId.value='';
+  startIn.disabled=false;
+};
+
+viewMonth.onchange=()=>render(viewMonth.value);
+searchIP.oninput=()=>render(viewMonth.value);
+
+document.getElementById('showAll').onclick=()=>{
   tbody.innerHTML='';
-  const months=getAllMonthsStored();
-  let total=0;
-  months.forEach(mon=>{
-    const arr=getEntriesForMonth(mon).filter(e => !searchInput.value.trim() || (e.ips && e.ips.includes(searchInput.value.trim())));
-    arr.forEach((e,idx)=>{
-      total++;
-      const tr=document.createElement('tr');
-      const endDate=addDays(e.start,30);
-      const remaining=daysRemaining(endDate);
-      const profit=(Number(e.sale)||0)-(Number(e.expense)||0);
-      let profitClass=profit>=0?'profit-positive':'profit-negative';
-      let remainingClass=remaining<0?'remaining-expired':(remaining<=5?'remaining-warning':'');
-      tr.innerHTML=`<td>${total}</td>
-        <td>${escapeHtml(e.name)}</td>
-        <td>${formatDayMMM(e.start)} (${mon})</td>
-        <td>${formatDayMMM(endDate)}</td>
-        <td class="${remainingClass}">${remaining>=0?remaining+' days':'Expired'}</td>
-        <td>${escapeHtml(e.ips||'')}</td>
-        <td>${escapeHtml(e.notes||'')}</td>
-        <td class="small-col">${e.sale}</td>
-        <td class="small-col">${e.expense}</td>
-        <td class="small-col ${profitClass}">${profit}</td>
-        <td>${escapeHtml(e.provider||'')}</td>
-        <td class="actions">
-          <button class="small" data-id="${e.id}" data-month="${mon}" onclick="editEntry(event)">Edit</button>
-          <button class="small" data-id="${e.id}" data-month="${mon}" onclick="deleteEntry(event)">Delete</button>
-        </td>`;
-      tbody.appendChild(tr);
-    });
-  });
-  summary.textContent=`Showing all months (${months.length} months, ${total} records)`;
-});
+  let n=0;
+  allMonths().forEach(m=>load(m).forEach(e=>{
+    if(searchIP.value && !(e.ips||'').includes(searchIP.value))return;
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${++n}</td><td>${e.name}</td><td>${e.start}</td>
+<td>${e.ips||''}</td><td>${e.sale}</td><td>${e.expense}</td>
+<td>${e.sale-e.expense}</td><td>${e.provider||''}</td>
+<td>${e.status}</td><td></td>`;
+    tbody.appendChild(tr);
+  }));
+  summary.textContent=`Full history (${n} records)`;
+};
 
-// IP Search
-searchInput.addEventListener('input',()=>{ renderTableForMonth(viewMonth.value, searchInput.value.trim()); });
-
-// Auto select current month & set default Start Date & Username
-(function init(){
-  const now=new Date();
-  const yyyy=now.getFullYear();
-  const mm=String(now.getMonth()+1).padStart(2,'0');
-  viewMonth.value=`${yyyy}-${mm}`;
-  const today = now.toISOString().split('T')[0];
-  startIn.value=today;
-  notesIn.value='Administrator';
-  renderTableForMonth(viewMonth.value);
-})();
+(()=>{const d=new Date();viewMonth.value=d.toISOString().slice(0,7);render(viewMonth.value)})();
 </script>
 </body>
 </html>
